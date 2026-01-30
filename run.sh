@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 python3 -m venv .venv
-source .venv/bin/activate
+. .venv/bin/activate
 
-pip install requirements.txt
+pip install -r requirements.txt
 
-python3 app.py 
+python3 app.py
