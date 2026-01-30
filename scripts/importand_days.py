@@ -1,6 +1,6 @@
 import requests
 import os
-import json
+
 from datetime import datetime
 
 TOKEN = os.environ.get('DAYS_TOKEN')
@@ -15,6 +15,6 @@ class Holidays:
         response = requests.get(self.url)
         response.raise_for_status()
         
-        holidays = json.loads(response.json()).get('response').get('holidays')
+        holidays = response.json().get('response').get('holidays')
         
         return holidays
