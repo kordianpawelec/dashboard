@@ -1,5 +1,6 @@
 from flask import Flask
 from scripts.importand_days import Holidays
+import json
 
 app = Flask(__name__)
 
@@ -7,7 +8,11 @@ holiday = Holidays()
 
 @app.route('/')
 def main():
-    return f"<p>data:\n{holiday.get_holidays()}</p>"
+    html = "<h1>Irish Holidays</h1><table border='1'><tr><th>Name</th><th>Date</th><th>Type</th></tr>"
+    
+    for holiday in holiday.get_holidays():
+        html += f"<tr><td>{holiday.get('name')}</td><td>{holiday.get('description')}</td><td>{holiday.get('date').get('iso')}</td><td>{holiday.get('type')}</td></tr>"
+    return html
 
 if __name__ == '__main__':
     app.run('0.0.0.0')
