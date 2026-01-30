@@ -8,10 +8,18 @@ holidays = Holidays()
 
 @app.route('/')
 def main():
-    html = "<h1>Irish Holidays</h1><table border='1'><tr><th>Name</th><th>Date</th><th>Type</th></tr>"
+    html = "<h1>Holidays</h1><table border='1'><tr><th>Name</th><th>Dates</th></tr>"
     
-    for holiday in holidays.get_holidays():
-        html += f"<tr><td>{holiday.get('name')}</td><td>{holiday.get('description')}</td><td>{holiday.get('date').get('iso')}</td><td>{holiday.get('type')}</td></tr>"
+    for names, dates_list in holidays.get_data().items():
+        
+        dates = ''
+        
+        for date in dates_list:
+            dates += f'{date['date']}->{date['country']} '
+
+        html += f"<tr><td>{names}</td><td>{dates}</td></tr>"
+    
+    html += "</table>"
     return html
 
 if __name__ == '__main__':

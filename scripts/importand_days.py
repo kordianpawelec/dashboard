@@ -33,3 +33,5 @@ class Holidays:
             
             for holiday in holidays:
                 data[holiday['name']].append({'date': holiday['date'], 'country':c})
+        
+        return data
