@@ -1,9 +1,13 @@
 from flask import Flask
+from scripts.importand_days import Holidays
+
 app = Flask(__name__)
+
+holiday = Holidays()
 
 @app.route('/')
 def main():
-    return "<h1 style='color:blue'>Hello There!</h1>"
+    return f"<p>data:\n{holiday.get_holidays()}</p>"
 
 if __name__ == '__main__':
     app.run('0.0.0.0')
