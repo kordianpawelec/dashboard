@@ -8,11 +8,11 @@ app = FastAPI()
 
 holidays = Holidays()
 
-@app.get('/', response_class=List[HolidaysData])
+@app.get('/', response_model=List[HolidaysData])
 def main():
     return holidays.get_data()
 
-@app.get('/upcoming', response_class=List[UpcomingData])
+@app.get('/upcoming', response_model=List[UpcomingData])
 def upcoming():
     return holidays.check_close_days()
 
