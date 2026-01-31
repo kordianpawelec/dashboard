@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from scripts.importand_days import Holidays
 from models.holidays import HolidaysData, UpcomingData
-from typing import List
+from typing import List, Dict
 import uvicorn
 
 app = FastAPI()
 
 holidays = Holidays()
 
-@app.get('/', response_model=List[HolidaysData])
+@app.get('/', response_model=Dict[HolidaysData])
 def main():
     return holidays.get_data()
 

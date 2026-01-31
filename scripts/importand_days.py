@@ -39,6 +39,8 @@ class Holidays:
     def get_data(self):
         current_day = datetime.today()
         data = defaultdict(list)
+        os.makedirs('data', exist_ok=True)
+        
         
         if os.path.isfile('data/holidays.json'):
             with open('data/holidays.json', 'r') as f:
@@ -51,7 +53,6 @@ class Holidays:
         logger.info('Fetching fresh data from API...')
         for c in ['pl', 'ie']:
             holidays = self.get_holidays(c)
-            os.makedirs('data', exist_ok=True)
             
             for holiday in holidays:
                 date =  holiday['date']
