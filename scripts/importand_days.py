@@ -40,6 +40,7 @@ class Holidays:
                 cached_data = json.load(f)
                 harvested_data =  datetime.strptime(cached_data.get('data_harvest_date'), '%Y-%m-%d %H:%M:%S.%f')
                 if abs((harvested_data - current_day).days) < 2:
+                    print('using cached data')
                     return cached_data
                 
 
