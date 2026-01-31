@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 from collections import defaultdict
 
 from datetime import datetime
@@ -30,7 +31,17 @@ class Holidays:
         return data
 
     def get_data(self):
+        current_day = datetime.today()
         data = defaultdict(list)
+        
+        if os.path.isfile('data/holidays.json'):
+            with open('data/holidays.json', 'r') as f:
+                cached_data = json.load(f)
+                harvested_data =  datetime.strptime(cached_data.get('data_harvest_date'), '%Y-%m-%d %H:%M:%S.%f')
+                if abs((harvested_data - current_day).days) < 2:
+                    return cached_data
+                
+
         for c in ['pl', 'ie']:
             holidays = self.get_holidays(c)
             
@@ -42,6 +53,10 @@ class Holidays:
                     continue
                 data[name].append({'date': date, 'country':c})
         
+        with open('data/holidays.json', 'w') as f:
+            time_stamp = {'data_harvest_date': str(current_day)}
+            data.update(time_stamp)
+            json.dump(data, f)
         return data
 
     def check_close_days(self):
@@ -50,6 +65,9 @@ class Holidays:
         current_day = datetime.today()
         
         for name, dates in data.items():
+            if name == 'data_harvest_date':
+                continue
+        
             for date in dates:
                 holiday_date = datetime.strptime(date['date'], '%d-%m-%Y')
                 days_until = abs(holiday_date - current_day).days
