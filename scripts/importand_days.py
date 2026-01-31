@@ -1,9 +1,13 @@
 import requests
 import os
+import logging
 import json
 from collections import defaultdict
-
 from datetime import datetime
+
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 TOKEN = os.environ.get('DAYS_TOKEN')
 YEAR = datetime.now().year
@@ -16,12 +20,13 @@ class Holidays:
 
 
     def get_holidays(self, country: str):
-        print('requesting api...')
+        logging.info(f'requsting API for {country}')
         response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key={TOKEN}&country={country}&year={YEAR}')
         response.raise_for_status()
     
         holidays = response.json().get('response').get('holidays')
-        
+        logger.info(f'Fetched {len(holidays)} holidays for {country}')
+
         data = []
         for holiday in holidays:
             date = holiday.get('date').get('datetime')
@@ -40,10 +45,10 @@ class Holidays:
                 cached_data = json.load(f)
                 harvested_data =  datetime.strptime(cached_data.get('data_harvest_date'), '%Y-%m-%d %H:%M:%S.%f')
                 if abs((harvested_data - current_day).days) < 2:
-                    print('using cached data')
+                    logger.info('Using cached data from ' + cached_data.get('data_harvest_date'))
                     return cached_data
                 
-
+        logger.info('Fetching fresh data from API...')
         for c in ['pl', 'ie']:
             holidays = self.get_holidays(c)
             os.makedirs('data', exist_ok=True)
@@ -60,6 +65,8 @@ class Holidays:
             time_stamp = {'data_harvest_date': str(current_day)}
             data.update(time_stamp)
             json.dump(data, f)
+            
+        logger.info('Saved fresh data to cache')
         return data
 
     def check_close_days(self):
