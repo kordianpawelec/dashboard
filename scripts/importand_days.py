@@ -21,8 +21,6 @@ class Holidays:
     
         holidays = response.json().get('response').get('holidays')
         
-        holiday.get('date').get('iso')
-        
         data = []
         for holiday in holidays:
             date = holiday.get('date').get('datetime')
