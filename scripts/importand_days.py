@@ -16,6 +16,7 @@ class Holidays:
 
 
     def get_holidays(self, country: str):
+        print('requesting api...')
         response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key={TOKEN}&country={country}&year={YEAR}')
         response.raise_for_status()
     
