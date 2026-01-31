@@ -3,15 +3,15 @@ from typing import List
 
 
 
-class Dates(BaseModel):
+class DatesData(BaseModel):
     date: str
     country: str
 
-class Holidays(BaseModel):
+class HolidaysData(BaseModel):
     name: str
-    dates: List[Dates]
+    dates: List[DatesData]
 
-class Upcoming(BaseModel):
+class UpcomingData(BaseModel):
     name: str
     date: str
     country: str
