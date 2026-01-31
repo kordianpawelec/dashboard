@@ -15,7 +15,7 @@ def main():
         dates = ''
         
         for date in dates_list:
-            dates += f'{date['date']}->{date['country']} '
+            dates += f'{date['date']} {date['country']} '
 
         html += f"<tr><td>{names}</td><td>{dates}</td></tr>"
     
