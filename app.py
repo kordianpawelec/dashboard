@@ -1,16 +1,18 @@
 from fastapi import FastAPI
 from scripts.importand_days import Holidays
+from models.holidays import Holidays, Dates, Upcoming
+from typing import Dict, List
 import uvicorn
 
 app = FastAPI()
 
 holidays = Holidays()
 
-@app.get('/')
+@app.get('/', response_class=Dict[str, List[Dates]])
 def main():
     return holidays.get_data()
 
-@app.get('/upcoming')
+@app.get('/upcoming', response_class=List[Upcoming])
 def upcoming():
     return holidays.check_close_days()
 

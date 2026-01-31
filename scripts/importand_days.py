@@ -86,7 +86,10 @@ class Holidays:
                         'name': name,
                         'date': date['date'],
                         'country': date['country'],
-                        'days_until': days_until
+                        'days_until': days_until + 1
                     })
                     
         return close_days
+    
+    def add_important_days(self, payload):
+        pass
