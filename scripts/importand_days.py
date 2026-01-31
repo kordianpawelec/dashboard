@@ -38,7 +38,7 @@ class Holidays:
                 date =  holiday['date']
                 name = holiday['name']
                 
-                if any(date in [x['date'] for x in data[name]]):
+                if any(date == x['date'] for x in data[name]):
                     continue
                 data[name].append({'date': date, 'country':c})
         
