@@ -15,6 +15,3 @@ class UpcomingData(BaseModel):
     date: str
     country: str
     days_until: int
-
-class AllHolidays(RootModel[Dict[str, List[DatesData]]]):
-    pass

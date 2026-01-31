@@ -8,9 +8,9 @@ app = FastAPI()
 
 holidays = Holidays()
 
-@app.get('/', response_model=Dict[HolidaysData])
+@app.get('/', response_model=List[HolidaysData])
 def main():
-    return holidays.get_data()
+    return [HolidaysData(name=name, dates=dates) for name, dates in holidays.get_data().items() if name != 'data_harvest_date']
 
 @app.get('/upcoming', response_model=List[UpcomingData])
 def upcoming():
