@@ -4,7 +4,7 @@ from typing import List, Dict
 
 class DatesData(BaseModel):
     date: str
-    country: str
+    country: str = 'ie'
 
 class HolidaysData(BaseModel):
     name: str

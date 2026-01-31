@@ -2,6 +2,7 @@ import requests
 import os
 import logging
 import json
+from models.holidays import HolidaysData
 from collections import defaultdict
 from datetime import datetime
 
@@ -15,7 +16,7 @@ BEFORE = 7
 
 class Holidays:
     def __init__(self):
-        pass
+        os.makedirs('data', exist_ok=True)
 
 
 
@@ -39,12 +40,15 @@ class Holidays:
     def get_data(self):
         current_day = datetime.today()
         data = defaultdict(list)
-        os.makedirs('data', exist_ok=True)
         
-        
+        if os.path.isfile('data/private_dates.json'):
+            with open('data/private_dates.json', 'r') as f:
+                data.update(json.load(f))
+                
         if os.path.isfile('data/holidays.json'):
             with open('data/holidays.json', 'r') as f:
                 cached_data = json.load(f)
+                cached_data.update(data)
                 harvested_data =  datetime.strptime(cached_data.get('data_harvest_date'), '%Y-%m-%d %H:%M:%S.%f')
                 if abs((harvested_data - current_day).days) < 2:
                     logger.info('Using cached data from ' + cached_data.get('data_harvest_date'))
@@ -80,7 +84,7 @@ class Holidays:
                 continue
         
             for date in dates:
-                holiday_date = datetime.strptime(date['date'], '%d-%m-%Y')
+                holiday_date = datetime.strptime(date['date'], '%d-%m-%Y').replace(year=current_day.year)
                 days_until = abs(holiday_date - current_day).days
                 if days_until <= BEFORE:
                     close_days.append({
@@ -92,5 +96,25 @@ class Holidays:
                     
         return close_days
     
-    def add_important_days(self, payload):
-        pass
+    def add_important_days(self, data: HolidaysData):
+        print(data)
+        holiday_data = {data.name: [obj.model_dump() for obj in data.dates]}
+        print(holiday_data)
+        try:
+            if os.path.isfile('data/private_dates.json'):
+                with open('data/private_dates.json', 'r') as f:
+                    file_data = json.load(f)
+
+            else:
+                file_data = {}
+            
+            
+            with open('data/private_dates.json', 'w') as f:
+                file_data.update(holiday_data)
+                json.dump(file_data, f, indent=2)
+            
+            logger.info(f'Added {len(holiday_data)} important dates')
+            
+        except Exception as e:
+            logging.error('Error', e)
+            raise
