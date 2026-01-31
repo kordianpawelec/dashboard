@@ -44,6 +44,7 @@ class Holidays:
 
         for c in ['pl', 'ie']:
             holidays = self.get_holidays(c)
+            os.makedirs('data', exist_ok=True)
             
             for holiday in holidays:
                 date =  holiday['date']
