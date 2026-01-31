@@ -6,14 +6,13 @@ from datetime import datetime
 
 TOKEN = os.environ.get('DAYS_TOKEN')
 YEAR = datetime.now().year
-
+BEFORE = 7
 
 class Holidays:
     def __init__(self):
         pass
 
-    def current_day(self):
-        current_day = datetime.today().strftime('%d-%m-%Y')
+
 
     def get_holidays(self, country: str):
         response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key={TOKEN}&country={country}&year={YEAR}')
@@ -27,7 +26,7 @@ class Holidays:
             data.append({
                 'name': holiday.get('name'),
                 'date': f'{date.get('day')}-{date.get('month')}-{date.get('year')}'})
-
+            
         return data
 
     def get_data(self):
@@ -36,7 +35,30 @@ class Holidays:
             holidays = self.get_holidays(c)
             
             for holiday in holidays:
-                if holiday['date'] not in data[holiday['name']]:
-                    data[holiday['name']].append({'date': holiday['date'], 'country':c})
+                date =  holiday['date']
+                name = holiday['name']
+                
+                if any(date in [x['date'] for x in data[name]]):
+                    continue
+                data[name].append({'date': date, 'country':c})
         
         return data
+
+    def check_close_days(self):
+        close_days = []
+        data = self.get_data()
+        current_day = datetime.today()
+        
+        for name, dates in data.items():
+            for date in dates:
+                holiday_date = datetime.strptime(date['date'], '%d-%m-%Y')
+                days_until = abs(holiday_date - current_day).days
+                if days_until <= BEFORE:
+                    close_days.append({
+                        'name': name,
+                        'date': date['date'],
+                        'country': date['country'],
+                        'days_until': days_until
+                    })
+                    
+        return close_days
