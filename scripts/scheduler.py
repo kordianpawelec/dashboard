@@ -23,7 +23,7 @@ class Scheduler:
         self.checked = False
         self.last_send = None
         self.send_again = None
-        self.run = True
+        self.run = False #Keeping it off for now
 
     def get(self):
         try:
@@ -38,6 +38,7 @@ class Scheduler:
 
     def run_schduler(self):
         while self.run:
+            print('running')
             current_day = datetime.today()
             
             if not self.checked and current_day.hour == 14:
@@ -65,14 +66,15 @@ class Scheduler:
         body = ''
         today = False
         for date in data:
-            if date.days_until != 'Today!':
-                head += f'{date.name} is in {date.days_until} '
+            print(date)
+            if date.get('days_until') != 'Today!':
+                head += f'{date.get('name')} is in {date.get('days_until')} '
                 if not body:
                     body += f'U still got time!'
             else:
                 today = True
-                head += f'{date.name} is in {date.days_until} '
-                body += f'{date.name} is Today!'
+                head += f'{date.get('name')} is in {date.get('days_until')} '
+                body += f'{date.get('name')} is Today!'
         
         if today:
                 self.send_again = (head, body)
@@ -82,4 +84,5 @@ class Scheduler:
             self.alert.send_email(head, body)
 
 
+print('starting')
 Scheduler().run_schduler()

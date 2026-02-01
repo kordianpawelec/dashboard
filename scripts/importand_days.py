@@ -10,7 +10,7 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-TOKEN = os.environ.get('DAYS_TOKEN')
+TOKEN = os.environ.get('TOKEN')
 YEAR = datetime.now().year
 BEFORE = 7
 
