@@ -24,7 +24,6 @@ class Scheduler:
         self.last_send = None
         self.send_again = None
         self.run = True
-        self.run_schduler()
 
     def get(self):
         try:
@@ -43,7 +42,7 @@ class Scheduler:
             
             if not self.checked and current_day.hour == 14:
                 self.checked = not self.checked
-                logger.info('daily check at', current_day)
+                logger.info(f'daily check at {current_day}')
                 checked_data = self.get()
                 
                 if checked_data :
@@ -59,7 +58,7 @@ class Scheduler:
                 self.checked = not self.checked
                 self.pivot_date = current_day
             
-            time.sleep((60*30))
+            time.sleep(60*30)
 
     def reminder(self, data: List[UpcomingData]):
         head = ''
@@ -81,3 +80,6 @@ class Scheduler:
                 self.last_send = datetime.now()
         else:
             self.alert.send_email(head, body)
+
+
+Scheduler().run_schduler()

@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 load_dotenv()
 from scripts.importand_days import Holidays
-from scripts.scheduler import Scheduler
 from models.holidays import HolidaysData, UpcomingData
 from typing import List
 import uvicorn
