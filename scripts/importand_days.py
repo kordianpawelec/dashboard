@@ -91,7 +91,7 @@ class Holidays:
                         'name': name,
                         'date': date['date'],
                         'country': date['country'],
-                        'days_until': days_until + 1
+                        'days_until': 'Today!' if holiday_date.day == current_day.day else days_until + 1
                     })
                     
         return close_days

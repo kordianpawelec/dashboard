@@ -14,4 +14,4 @@ class UpcomingData(BaseModel):
     name: str
     date: str
     country: str
-    days_until: int
+    days_until: int | str
