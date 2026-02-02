@@ -14,7 +14,6 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            git clone https://github.com/kordianpawelec/dashboard.git
             git pull origin main
             docker build -t dashboard:latest .
             docker compose down
