@@ -5,9 +5,27 @@
 kordianpawelec.com, www.kordianpawelec.com {
     reverse_proxy dashboard-app:8000 {
         lb_policy round_robin
-        health_check /health_check
         health_uri /health_check
         health_interval 10s
         health_timeout 5s
+    }
+    log {
+        format json {
+            message_key     msg          
+            level_key      severity       
+            time_key       timestamp      
+            name_key       logger       
+            caller_key     function       
+            stacktrace_key stack          
+            time_format    "2006-01-02 15:04:05 MST"  
+            time_local                   
+            duration_format "ms"          
+            level_format   "upper"       
+        }
+        output file /var/log/caddy/access.log {
+            roll_size 10MB 
+            roll_keep 5 
+            roll_keep_days 14
+        }
     }
 }
