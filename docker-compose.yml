@@ -1,10 +1,10 @@
 services:
   dashboard-app:
-    networks:
-      - app-network
     build: 
       context: .
       dockerfile: Dockerfile
+    networks:
+      - app-network
     volumes:
       - ./data:/app/data
     ports:
@@ -16,6 +16,10 @@ services:
     restart: unless-stopped
     deploy:
       replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
 
   caddy:
     image: caddy:latest
