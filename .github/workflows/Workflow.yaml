@@ -14,8 +14,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd dashboard
-            git pull
+            cd /dashboard
+            git pull 
             docker build -t dashboard:latest .
-            docker compose down
-            docker compose up -d
+            docker-compose down
+            docker-compose up -d
