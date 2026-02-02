@@ -1,5 +1,7 @@
 services:
   dashboard-app:
+    networks:
+      - app-network
     build: 
       context: .
       dockerfile: Dockerfile
@@ -7,8 +9,6 @@ services:
       - ./data:/app/data
     ports:
       - "8000"
-    networks:
-      - app-network
     env_file:
       - .env
     environment:
