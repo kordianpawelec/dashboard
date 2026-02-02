@@ -1,0 +1,13 @@
+kordianpawelec.com, www.kordianpawelec.com {
+    tls {
+        dns porkbun {env.DNS_API} {env.SECRET_API}
+    }
+
+    reverse_proxy dashboard-app:8000
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+    }
+}
