@@ -38,8 +38,8 @@ services:
       - dashboard-app
 
 volumes:
-  caddy_data
-  caddy_config
+  caddy_data: {}
+  caddy_config: {}
 
 networks:
   app-network:
