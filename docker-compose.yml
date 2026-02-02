@@ -29,9 +29,6 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-    environment:
-      - DNS_API=${DNS_API}
-      - SECRET_API=${SECRET_API}
     networks:
       - app-network
     depends_on:
