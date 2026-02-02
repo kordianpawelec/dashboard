@@ -3,4 +3,4 @@ set -e
 
 
 docker-compose down --remove-orphans
-docker-compose compose up -d
+docker-compose up -d
