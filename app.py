@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 load_dotenv()
 from scripts.importand_days import Holidays
@@ -19,7 +20,8 @@ def health_check():
 
 @app.get('/', response_model=List[HolidaysData])
 def main():
-    return [HolidaysData(name=name, dates=dates) for name, dates in holidays.get_data().items() if name != 'data_harvest_date']
+    # return [HolidaysData(name=name, dates=dates) for name, dates in holidays.get_data().items() if name != 'data_harvest_date']
+    return FileResponse('data/zuzia.png', media_type='image/png')
 
 @app.get('/upcoming', response_model=List[UpcomingData])
 def upcoming():
