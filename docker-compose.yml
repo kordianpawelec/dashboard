@@ -3,17 +3,19 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    networks:
-      - app-network
     volumes:
       - ./data:/app/data
     ports:
       - "8000"
+    networks:
+      - app-network
     env_file:
       - .env
     environment:
       PYTHONUNBUFFERED: 1
     restart: unless-stopped
+    deploy:
+      replicas: 2
 
   caddy:
     image: caddy:latest
