@@ -33,7 +33,7 @@ class Holidays:
             date = holiday.get('date').get('datetime')
             data.append({
                 'name': holiday.get('name'),
-                'date': f'{date.get('day')}-{date.get('month')}-{date.get('year')}'})
+                'date': f'{date.get("day")}-{date.get("month")}-{date.get("year")}'})
             
         return data
 
