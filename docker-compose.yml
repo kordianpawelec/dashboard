@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     deploy:
       replicas: 2
-      update_config:
+      config:
         parallelism: 1
         delay: 10s
         failure_action: rollback
