@@ -14,12 +14,6 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
     restart: unless-stopped
-    deploy:
-      replicas: 2
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback
 
   caddy:
     image: caddy:latest
