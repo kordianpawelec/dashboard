@@ -17,7 +17,9 @@ services:
     restart: unless-stopped
 
   caddy:
-    image: caddy:2-alpine
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     container_name: caddy-proxy
     restart: unless-stopped
     env_file:

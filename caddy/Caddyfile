@@ -1,8 +1,11 @@
-kordianpawelec.com, www.kordianpawelec.com {
-    tls {
-        dns porkbun {env.DNS_API} {env.SECRET_API}
+{
+    acme_dns porkbun {
+        api_key {env.DNS_API}
+        api_secret_key {env.SECRET_API}
     }
+}
 
+kordianpawelec.com, www.kordianpawelec.com {
     reverse_proxy dashboard-app:8000
 
     header {
