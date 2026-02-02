@@ -2,7 +2,8 @@
 set -e
 
 
-docker compose up
+docker-compose down
+docker-compose compose up -d
 # git pull
 
 # python3 -m venv .venv
