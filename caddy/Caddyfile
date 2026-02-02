@@ -25,7 +25,6 @@ kordianpawelec.com, www.kordianpawelec.com {
         output file /var/log/caddy/access.log {
             roll_size 10MB 
             roll_keep 5 
-            roll_keep_days 14
         }
     }
 }
