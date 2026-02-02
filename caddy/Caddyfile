@@ -1,16 +1,7 @@
 {
-    acme_dns porkbun {
-        api_key {env.DNS_API}
-        api_secret_key {env.SECRET_API}
-    }
+    email kordianpawelec2@gmail.com
 }
 
 kordianpawelec.com, www.kordianpawelec.com {
     reverse_proxy dashboard-app:8000
-
-    header {
-        X-Content-Type-Options nosniff
-        X-Frame-Options DENY
-        X-XSS-Protection "1; mode=block"
-    }
 }
