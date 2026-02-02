@@ -3,5 +3,8 @@
 }
 
 kordianpawelec.com, www.kordianpawelec.com {
-    reverse_proxy dashboard-app:8000
+    reverse_proxy dashboard-app:8000 {
+        lb_policy round_robin
+        health_check /health_check
+    }
 }

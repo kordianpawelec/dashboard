@@ -24,5 +24,9 @@ def update_dates(data: HolidaysData):
     holidays.add_important_days(data)
     return data
 
+@app.get('/health_check')
+def health_check():
+    return 'It works'
+
 if __name__ == '__main__':
     uvicorn.run('app:app', host='0.0.0.0', port=8000, reload=True)
