@@ -6,5 +6,8 @@ kordianpawelec.com, www.kordianpawelec.com {
     reverse_proxy dashboard-app:8000 {
         lb_policy round_robin
         health_check /health_check
+        health_uri /health_check
+        health_interval 10s
+        health_timeout 5s
     }
 }
