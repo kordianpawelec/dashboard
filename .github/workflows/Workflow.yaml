@@ -16,5 +16,4 @@ jobs:
           script: |
             cd dashboard
             git pull 
-            docker-compose down --remove-orphans
-            docker-compose up -d
+            sh run.sh

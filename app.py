@@ -22,7 +22,7 @@ def metrics():
     return {
         'cpu_percent': psutil.cpu_percent(),
         'ram_percent': psutil.virtual_memory().percent,
-        'stroage_percent': psutil.disk_usage().percent
+        'stroage_percent': psutil.disk_usage('/').percent
     }
 
 @app.get('/')
