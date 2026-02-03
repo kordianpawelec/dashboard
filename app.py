@@ -5,6 +5,8 @@ from scripts.importand_days import Holidays
 from models.holidays import HolidaysData, UpcomingData
 from typing import List
 import uvicorn
+import psutil
+
 
 
 app = FastAPI()
@@ -15,7 +17,13 @@ def health_check():
     return {'status': 'ok'}
 
 
-
+@app.get('/metrics')
+def metrics():
+    return {
+        'cpu_percent': psutil.cpu_percent(),
+        'ram_percent': psutil.virtual_memory().percent,
+        'stroage_percent': psutil.disk_usage().percent
+    }
 
 @app.get('/')
 def root():
