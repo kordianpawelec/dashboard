@@ -1,4 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 load_dotenv()
 from shared.scripts.importand_days import Holidays
@@ -11,6 +14,8 @@ import psutil
 
 app = FastAPI()
 holidays = Holidays()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get('/health_check')
 def health_check():
@@ -25,17 +30,21 @@ def metrics():
         'stroage_percent': psutil.disk_usage('/').percent
     }
 
-@app.get('/')
-def root():
-    return {
-        'message': 'Welcome to my API',
+@app.get('/', response_class=HTMLResponse)
+def root(request: Request):
+
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
         'endpoints': {
             '/upcoming': 'Get upcoming holidays',
             '/add-date': 'Add a new holiday',
             '/docs': 'Interactive API docs',
-            '/redoc': 'ReDoc documentation'
-        }
-    }
+            '/redoc': 'ReDoc documentation',
+            '/metrics': 'CPU RAM STORAGE',
+            '/health_check': 'Health check'
+            
+        } 
+    }) 
 
 @app.get('/upcoming', response_model=List[UpcomingData])
 def upcoming():

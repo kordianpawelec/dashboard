@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Dashboard using fastapi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Data</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/upcoming</td>
+                    <td>{{ endpoints['/upcoming'] }}</td>
+                    <td><a href="/upcoming" role="button">View</a></td>
+                </tr>
+                <tr>
+                    <td>/add-date</td>
+                    <td>{{ endpoints['/add-date'] }}</td>
+                    <td><a href="/docs#/default/add_date_add_date_post" role="button">Try it</a></td>
+                </tr>
+                <tr>
+                    <td>/docs</td>
+                    <td>{{ endpoints['/docs'] }}</td>
+                    <td><a href="/docs" role="button">Open</a></td>
+                </tr>
+                <tr>
+                    <td>/metrics</td>
+                    <td>{{ endpoints['/metrics'] }}</td>
+                    <td><a href="/metrics" role="button">View</a></td>
+                </tr>
+                <tr>
+                    <td>/health_check</td>
+                    <td>{{ endpoints['/health_check'] }}</td>
+                    <td><a href="/health_check" role="button">View</a></td>
+                </tr>
+                <tr>
+                    <td>/redoc</td>
+                    <td>{{ endpoints['/redoc'] }}</td>
+                    <td><a href="/redoc" role="button">Open</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
