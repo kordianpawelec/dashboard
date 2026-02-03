@@ -5,8 +5,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./shared/data:/app/data
-    ports:
-      - "8000"
+    # ports:
+    #   - "8000:8000"
     networks:
       - app-network
     env_file:
@@ -40,6 +40,21 @@ services:
       - app-network
     depends_on:
       - dashboard-app
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.scheduler
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - dashboard-app
+    networks:
+      - app-network
+    volumes:
+      - ./shared/data:/app/shared/data
+      - ./scheduler/logs:/app/scheduler/logs
 
 volumes:
   caddy_data: {}

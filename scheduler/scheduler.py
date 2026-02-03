@@ -23,12 +23,13 @@ class Scheduler:
         self.checked = False
         self.last_send = None
         self.send_again = None
-        self.run = False #Keeping it off for now
+        self.run = True #Keeping it off for now
+        print(self.get(), 'working')
 
     def get(self):
         try:
             logging.info('getting data from endpoint')
-            response =  requests.get('http://localhost:8000/upcoming')
+            response =  requests.get('http://dashboard-app:8000/upcoming')
             response.raise_for_status()
             logger.info('data reached', response.json())
             return response.json()
@@ -68,13 +69,13 @@ class Scheduler:
         for date in data:
             print(date)
             if date.get('days_until') != 'Today!':
-                head += f'{date.get('name')} is in {date.get('days_until')} '
+                head += f"{date.get('name')} is in {date.get('days_until')} "
                 if not body:
                     body += f'U still got time!'
             else:
                 today = True
-                head += f'{date.get('name')} is in {date.get('days_until')} '
-                body += f'{date.get('name')} is Today!'
+                head += f"{date.get('name')} is in {date.get('days_until')} "
+                body += f"{date.get('name')} is Today!"
         
         if today:
                 self.send_again = (head, body)

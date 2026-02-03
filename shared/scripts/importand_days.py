@@ -87,7 +87,7 @@ class Holidays:
         
             for date in dates:
                 holiday_date = datetime.strptime(date['date'], '%d-%m-%Y').replace(year=current_day.year)
-                days_until = abs(holiday_date - current_day).days
+                days_until = (holiday_date - current_day).days
                 if days_until <= BEFORE and days_until >= 0:
                     close_days.append({
                         'name': name,
