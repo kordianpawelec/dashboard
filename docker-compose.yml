@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./data:/app/data
+      - ./shared/data:/app/data
     ports:
       - "8000"
     networks:
@@ -16,6 +16,11 @@ services:
     restart: unless-stopped
     deploy:
       replicas: 2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health_check"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   caddy:
     image: caddy:latest

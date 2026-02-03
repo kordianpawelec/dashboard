@@ -4,9 +4,9 @@ import logging
 from dotenv import load_dotenv
 load_dotenv()
 from typing import List
-from scripts.alert import Alerts
+from shared.scripts.alert import Alerts
 from datetime import datetime
-from models.holidays import UpcomingData
+from shared.models.holidays import UpcomingData
 
 
 logging.basicConfig(filename="scheduler.log",

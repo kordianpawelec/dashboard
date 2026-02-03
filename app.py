@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
 load_dotenv()
-from scripts.importand_days import Holidays
-from models.holidays import HolidaysData, UpcomingData
+from shared.scripts.importand_days import Holidays
+from shared.models.holidays import HolidaysData, UpcomingData
 from typing import List
 import uvicorn
 import psutil

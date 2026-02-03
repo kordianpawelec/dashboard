@@ -2,7 +2,7 @@ import requests
 import os
 import logging
 import json
-from models.holidays import HolidaysData
+from shared.models.holidays import HolidaysData
 from collections import defaultdict
 from datetime import datetime
 
@@ -17,6 +17,8 @@ BEFORE = 7
 class Holidays:
     def __init__(self):
         os.makedirs('data', exist_ok=True)
+        self.holidays_path = 'shared/data/holidays.json'
+        self.private_days_path = 'shared/data/private_dates.json'
 
 
 
@@ -41,12 +43,12 @@ class Holidays:
         current_day = datetime.today()
         data = defaultdict(list)
         
-        if os.path.isfile('data/private_dates.json'):
-            with open('data/private_dates.json', 'r') as f:
+        if os.path.isfile(self.private_days_path):
+            with open(self.private_days_path, 'r') as f:
                 data.update(json.load(f))
                 
-        if os.path.isfile('data/holidays.json'):
-            with open('data/holidays.json', 'r') as f:
+        if os.path.isfile(self.holidays_path):
+            with open(self.holidays_path, 'r') as f:
                 cached_data = json.load(f)
                 cached_data.update(data)
                 harvested_data =  datetime.strptime(cached_data.get('data_harvest_date'), '%Y-%m-%d %H:%M:%S.%f')
@@ -66,7 +68,7 @@ class Holidays:
                     continue
                 data[name].append({'date': date, 'country':c})
         
-        with open('data/holidays.json', 'w') as f:
+        with open(self.holidays_path, 'w') as f:
             time_stamp = {'data_harvest_date': str(current_day)}
             data.update(time_stamp)
             json.dump(data, f)
@@ -86,7 +88,7 @@ class Holidays:
             for date in dates:
                 holiday_date = datetime.strptime(date['date'], '%d-%m-%Y').replace(year=current_day.year)
                 days_until = abs(holiday_date - current_day).days
-                if days_until <= BEFORE:
+                if days_until <= BEFORE and days_until >= 0:
                     close_days.append({
                         'name': name,
                         'date': date['date'],
@@ -101,15 +103,14 @@ class Holidays:
         holiday_data = {data.name: [obj.model_dump() for obj in data.dates]}
         print(holiday_data)
         try:
-            if os.path.isfile('data/private_dates.json'):
-                with open('data/private_dates.json', 'r') as f:
+            if os.path.isfile(self.private_days_path):
+                with open(self.private_days_path, 'r') as f:
                     file_data = json.load(f)
 
             else:
                 file_data = {}
             
-            
-            with open('data/private_dates.json', 'w') as f:
+            with open(self.private_days_path, 'w') as f:
                 file_data.update(holiday_data)
                 json.dump(file_data, f, indent=2)
             
