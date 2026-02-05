@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 from shared.scripts.importand_days import Holidays
-from shared.schemas import DBController, User
+from shared.schemas import DBController, User, init_db
+init_db()
 from shared.models.holidays import HolidaysData, UpcomingData
 from typing import List
 import hashlib
@@ -15,6 +16,7 @@ import uvicorn, psutil, os
 
 
 db_controller = DBController()
+
 app = FastAPI()
 holidays = Holidays()
 templates = Jinja2Templates(directory="templates")
