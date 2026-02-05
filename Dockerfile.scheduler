@@ -1,12 +1,14 @@
 FROM python:3.11-slim
 
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 WORKDIR /app
 
-COPY requirements.txt ./
+COPY pyproject.toml ./
 COPY shared ./shared
 COPY scheduler ./scheduler
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system -r pyproject.toml
 
 ENV PYTHONPATH=/app
 

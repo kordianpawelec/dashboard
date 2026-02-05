@@ -1,10 +1,12 @@
 FROM python:3.11
 
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 WORKDIR /app
 
-COPY requirements.txt .
+COPY pyproject.toml .
 
-RUN pip install -r requirements.txt
+RUN uv pip install --system -r pyproject.toml
 
 COPY . .
 
