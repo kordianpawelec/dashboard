@@ -4,11 +4,13 @@ from typing import List, Dict
 
 class DatesData(BaseModel):
     date: str
-    country: str = 'ie'
+    country: str = "ie"
+
 
 class HolidaysData(BaseModel):
     name: str
     dates: List[DatesData]
+
 
 class UpcomingData(BaseModel):
     name: str
