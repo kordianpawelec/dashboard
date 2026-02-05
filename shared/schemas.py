@@ -10,8 +10,9 @@ class Base(DeclarativeBase):
 
 
 engine = create_engine("sqlite:///dashboard.db", echo=True)
-Base.metadata.create_all(engine)
 
+def init_db():
+    Base.metadata.create_all(engine)
 
 class User(Base):
     __tablename__ = "user_account"
@@ -70,3 +71,4 @@ class DBController:
     def close(self):
         if self.session:
             self.session.close()
+
