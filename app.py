@@ -21,7 +21,7 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.post('/register', response_class=HTMLResponse)
+@app.post('/register')
 async def register(
     db: Session = Depends(get_db),
     username: str = Form(...),
