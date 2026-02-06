@@ -72,6 +72,7 @@ class APILogic:
         if existing_email:
             raise HTTPException(status_code=400, detail='email already in use')
         
+        print('PASSWORD HERE', password)
         hashed_password = password_hasher.hash(password[:72])
         new_user = crud_operations.create_user(
             session=session,
