@@ -1,85 +1,59 @@
-from fastapi import FastAPI, Request, HTTPException, Form
+from fastapi import FastAPI, Request, UploadFile, Form, File, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from dotenv import load_dotenv
-
+from sqlalchemy.orm import Session
 load_dotenv()
 from shared.scripts.importand_days import Holidays
-from shared.schemas import DBController, User, init_db
+from shared.schemas import init_db, get_db
 init_db()
 from shared.models.holidays import HolidaysData, UpcomingData
 from typing import List
-import hashlib
-import secrets
-import uvicorn, psutil, os
+import uvicorn, psutil
+from shared.api_logic import APILogic
 
-
-db_controller = DBController()
 
 app = FastAPI()
+crud_service = APILogic()
 holidays = Holidays()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-def verify_token(token: str):
-    if token != os.environ.get('ALLOWED_TOKEN'):
-        raise HTTPException(status_code=401, detail="Invalid token")
-    return token
-
 @app.post('/register', response_class=HTMLResponse)
 async def register(
-    request: Request,
+    db: Session = Depends(get_db),
     username: str = Form(...),
     email: str = Form(...),
     password: str = Form(...),
-    registration_token: str = Form(...)
+    # registration_token: str = Form(...)
 ):
-    try:
-        verify_token(registration_token)
-        
-        existing_user = db_controller.get_user_by_username(username)
-        if existing_user:
-            return """
-            <div class="alert alert-error">
-                Username already exists!
-            </div>
-            """
-        
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        user_token = secrets.token_urlsafe(32)
-        
-        new_user = User(
-            username=username,
-            email=email,
-            hashed_password=hashed_password,
-            token=user_token
-        )
-        
-        db_controller.add_user(new_user)
-        return f"""
-        <div class="alert alert-success">
-            <h3>Account Created!</h3>
-            <p>Username: {username}</p>
-            <p>Your API Token: <code>{user_token}</code></p>
-            <p style="color: red;"><strong>Save this token! You'll need it.</strong></p>
-        </div>
-        """
+    return crud_service.register_user(username=username, email=email, password=password, session=db)
 
-    except HTTPException as e:
-        return f"""
-        <div class="alert alert-error">
-            {e.detail}
-        </div>
-        """
-    except Exception as e:
-        return f"""
-        <div class="alert alert-error">
-            Error: {str(e)}
-        </div>
-        """
-    
+
+@app.get("/download/{user_id}/{file_id}")
+async def download_file(user_id: int, file_id: int, db: Session = Depends(get_db)):
+    return await crud_service.download_file(
+        user_id=user_id,
+        file_id=file_id,
+        session=db
+    )
+
+
+@app.post('/upload/{user_id}', response_class=HTMLResponse)
+async def upload_file(
+    user_id: str,
+    db: Session = Depends(get_db),
+    file: UploadFile = File(...)
+):
+    return await crud_service.upload_file(
+        session=db,
+        user_id=user_id,
+        file=file
+    )
+
+
 @app.get("/health_check")
 def health_check():
     return {"status": "ok"}
@@ -96,20 +70,16 @@ def metrics():
 
 @app.get("/", response_class=HTMLResponse)
 def root(request: Request):
-
     return templates.TemplateResponse(
         "dashboard.html",
-        {
-            "request": request,
-            "endpoints": {
-                "/upcoming": "Get upcoming holidays",
-                "/add-date": "Add a new holiday",
-                "/docs": "Interactive API docs",
-                "/redoc": "ReDoc documentation",
-                "/metrics": "CPU RAM STORAGE",
-                "/health_check": "Health check",
-            },
-        },
+        {"request": request, "endpoints": {
+            "/docs": "API docs",
+            "/register": "Register",
+            "/login": "Login",
+            "/upload/{user_id}": "Upload file",
+            "/files/{user_id}": "List files",
+            "/download/{user_id}/{file_id}": "Download",
+        }},
     )
 
 
