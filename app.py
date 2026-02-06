@@ -50,7 +50,7 @@ async def upload_file(
     db: Session = Depends(get_db),
     file: UploadFile = File(...)
 ):
-    return await crud_service.upload_file(
+    return crud_service.upload_file(
         session=db,
         user_id=user_id,
         file=file
