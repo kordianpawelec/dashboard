@@ -68,7 +68,7 @@ class APILogic:
         if existing_user:
             raise HTTPException(status_code=400, detail='user already exists')
         
-        existing_email = crud_operations.get_user_by_email(email)
+        existing_email = crud_operations.get_user_by_email(session, email)
         if existing_email:
             raise HTTPException(status_code=400, detail='email already in use')
         
