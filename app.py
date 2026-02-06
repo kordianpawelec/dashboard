@@ -41,7 +41,7 @@ async def download_file(user_id: int, file_id: int, db: Session = Depends(get_db
     )
 
 
-@app.post('/upload/{user_id}', response_class=HTMLResponse)
+@app.post('/upload/{user_id}')
 async def upload_file(
     user_id: str,
     db: Session = Depends(get_db),
