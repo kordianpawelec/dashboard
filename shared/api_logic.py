@@ -72,7 +72,7 @@ class APILogic:
         if existing_email:
             raise HTTPException(status_code=400, detail='email already in use')
         
-        hashed_password = password_hasher.hash(password)
+        hashed_password = password_hasher.hash(password.encode()[:72])
         new_user = crud_operations.create_user(
             session=session,
             username=username,
@@ -92,7 +92,7 @@ class APILogic:
         if not user:
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
-        if not password_hasher.verify(password, user.hashed_password):
+        if not password_hasher.verify(password.encode()[:72], user.hashed_password):
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
         return {
