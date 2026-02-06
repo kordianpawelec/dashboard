@@ -40,6 +40,9 @@ async def download_file(user_id: int, file_id: int, db: Session = Depends(get_db
         session=db
     )
 
+@app.get("/list_files/{user_id}")
+async def list_files(user_id: int, db: Session = Depends(get_db)):
+    return await crud_service.list_files(user_id=user_id, session=db)
 
 @app.post('/upload/{user_id}')
 async def upload_file(
