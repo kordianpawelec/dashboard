@@ -27,6 +27,7 @@ class Scheduler:
         self.last_send = None
         self.send_again = None
         self.run = True  # Keeping it off for now
+        self.sent = False
         print(self.get(), "working")
 
     def get(self):
@@ -38,18 +39,24 @@ class Scheduler:
             return response.json()
 
         except Exception as e:
-            logger.error("Failed to reach the endpoint", e)
+            logger.error(f"Failed to reach the endpoint: {e}")
+            return None
 
     def run_schduler(self):
         while self.run:
             print("running")
             current_day = datetime.today()
 
-            if not self.checked and current_day.hour == 14:
-                self.checked = not self.checked
-                logger.info(f"daily check at {current_day}")
-                checked_data = self.get()
+            if abs(self.pivot_date - current_day) > 0:
+                self.checked = False
+                self.pivot_date = current_day
+                logger.info(f"New Day {current_day}")
 
+            if not self.checked and current_day == 14:
+                self.checked = True
+                logger.info(f'daily check at 14:00 {current_day}')
+                checked_data = self.get()
+                
                 if checked_data:
                     self.reminder(checked_data)
 
@@ -58,38 +65,40 @@ class Scheduler:
                 and self.send_again
                 and abs((self.last_send - datetime.now()).total_seconds()) >= 14400
             ):
+                logger.info("Sending second 'today' reminder")
                 self.alert.send_email(*self.send_again)
                 self.last_send = None
                 self.send_again = None
 
-            if abs((self.pivot_date - current_day).days) > 0:
-                self.checked = not self.checked
-                self.pivot_date = current_day
-
-            time.sleep(60 * 30)
+            time.sleep(60 * 20)
 
     def reminder(self, data: List[UpcomingData]):
         head = ""
         body = ""
-        today = False
+        has_today_event = False
+        has_upcoming_event = False
+        
         for date in data:
-            print(date)
-            if date.get("days_until") != "Today!":
-                head += f"{date.get('name')} is in {date.get('days_until')} "
-                if not body:
-                    body += f"U still got time!"
-            else:
+            days_until = date.days_until
+            name = date.name
+            
+            if days_until == "Today!":
+                has_today_event = True
+                head += f"{name} is Today !!!"
+                body += f"{name} is happening today!\n"
+            elif days_until <= 7 and days_until >= 1:
                 today = True
                 head += f"{date.get('name')} is in {date.get('days_until')} "
                 body += f"{date.get('name')} is Today!"
-
-        if today:
+            logger.info("Sent upcoming events reminder")
+        if has_today_event:
             self.send_again = (head, body)
             self.alert.send_email(*self.send_again)
             self.last_send = datetime.now()
-        else:
-            self.alert.send_email(head, body)
+            logger.info("Sent upcoming events reminder, will send again in 4 hours")
 
+        elif has_upcoming_event:
+            self.alert.send_email(head, body or "Events coming up soon!")
+            logger.info("Sent upcoming events reminder")
 
-print("starting")
 Scheduler().run_schduler()
