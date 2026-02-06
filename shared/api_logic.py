@@ -74,6 +74,7 @@ class APILogic:
         
         print('PASSWORD HERE', password)
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
         new_user = crud_operations.create_user(
             session=session,
             username=username,
