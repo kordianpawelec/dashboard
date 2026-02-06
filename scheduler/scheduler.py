@@ -47,7 +47,7 @@ class Scheduler:
             print("running")
             current_day = datetime.today()
 
-            if abs(self.pivot_date - current_day) > 0:
+            if abs(self.pivot_date.day - current_day.day) > 0:
                 self.checked = False
                 self.pivot_date = current_day
                 logger.info(f"New Day {current_day}")
