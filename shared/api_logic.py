@@ -4,10 +4,10 @@ from fastapi.responses import FileResponse
 from shared.schemas import Files, User
 from pathlib import Path
 from shared.crud_operations import crud_operations
-from passlib.context import CryptContext
+import bcrypt
 import os
 
-password_hasher = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 class APILogic:
     def __init__(self):
@@ -73,7 +73,7 @@ class APILogic:
             raise HTTPException(status_code=400, detail='email already in use')
         
         print('PASSWORD HERE', password)
-        hashed_password = password_hasher.hash(password[:72])
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         new_user = crud_operations.create_user(
             session=session,
             username=username,
@@ -93,7 +93,7 @@ class APILogic:
         if not user:
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
-        if not password_hasher.verify(password[:72], user.hashed_password):
+        if not bcrypt.checkpw(password.encode('utf-8'), user.hashed_password.encode('utf-8')):
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
         return {
