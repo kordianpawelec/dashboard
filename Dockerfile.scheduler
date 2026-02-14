@@ -13,4 +13,4 @@ RUN uv pip install --system -r pyproject.toml
 ENV PYTHONPATH=/app
 
 CMD ["python3", "scheduler/scheduler.py"]
-# CMD ["python3", "-m", "scheduler.scheduler"]
+# CMD ["python3", "-m", "scheduler.scheduler"]   

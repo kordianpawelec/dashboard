@@ -3,6 +3,10 @@
 }
 
 kordianpawelec.com, www.kordianpawelec.com {
+    handle /notify/* {
+        reverse_proxy http://localhost:20000
+    }
+
     reverse_proxy dashboard-app:8000 {
         lb_policy round_robin
         health_uri /health_check
