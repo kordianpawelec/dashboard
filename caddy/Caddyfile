@@ -3,7 +3,7 @@
 }
 
 kordianpawelec.com, www.kordianpawelec.com {
-    handle /homelab {
+    handle /homelab* {
         reverse_proxy http://ntfy:80
     }
 
